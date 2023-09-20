@@ -1,0 +1,10 @@
+.nuxt
+dist
+node_modules
+.idea
+.vsc
+.env
+_nuxt
+backup
+android
+yarn.lock

@@ -1,0 +1,18 @@
+{
+  "name": "Glucose Monitor",
+  "short_name": "GlucoseMonitor",
+  "lang": "hu",
+  "display": "standalone",
+  "start_url": "/",
+  "background_color": "#f8bbd0",
+  "theme_color": "#f8bbd0",
+  "description": "Glucose Monitor",
+  "useWebmanifestExtension": true,
+  "icons": [
+    {
+      "src": "/blood_glucose/icon/blood-glucose-logo.png",
+      "sizes": "64x64",
+      "type": "image/jpeg"
+    }
+  ]
+}
