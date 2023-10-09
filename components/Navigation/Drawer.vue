@@ -5,7 +5,7 @@
                        temporary
                        v-on:focusout="toggleMenu(false)"
   >
-    <div style="display: flex;flex-direction:column;justify-content: center;align-items: center">
+<!--    <div style="display: flex;flex-direction:column;justify-content: center;align-items: center">
       <v-avatar
           size="150"
           class="pt-5"
@@ -19,7 +19,7 @@
       </v-avatar>
       <h3 style="color: white">{{ fullName }}</h3>
     </div>
-    <v-divider class="my-2" />
+    <v-divider class="my-2" />-->
     <v-list>
       <v-list-item v-for="(item, index) in menuList"
                    :key="`menu-item-${index+1}`"
@@ -34,7 +34,7 @@
           <v-list-item-title>{{item.title}}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item :style="`color: ${colors.textColor}`"
+<!--      <v-list-item :style="`color: ${colors.textColor}`"
                     @click="logout"
       >
         <v-list-item-icon>
@@ -43,7 +43,7 @@
         <v-list-item-content>
           <v-list-item-title>Kijelentkezés</v-list-item-title>
         </v-list-item-content>
-      </v-list-item>
+      </v-list-item>-->
     </v-list>
   </v-navigation-drawer>
 </template>

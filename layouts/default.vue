@@ -1,10 +1,10 @@
 <template>
-  <v-app>
+  <v-app class="def-bg-color">
     <AppBar :socket="socket" v-on:show-chat-window="show = true" />
 <!--    <ControlBar v-if="$store.state.tabStore.activeTab !== 3" />-->
     <NavigationDrawer />
     <NavigationChatWindow v-model="show" v-if="socket"/>
-    <v-main style="background: #03045e">
+    <v-main class="def-bg-color">
       <Nuxt />
     </v-main>
   </v-app>
@@ -14,7 +14,7 @@
 import {APIGET} from "@/api/apiHelper";
 import io from 'socket.io-client';
 import {getToken} from "~/api/loginHelper";
-import {createConnection, emitStartUserActivity, onLeave, onUpdateUserList} from "@/plugins/socketClient";
+import {createConnection, emitMessage, onLeave, onMessage, onUpdateUserList} from "@/plugins/socketClient";
 export default {
   name: 'DefaultLayout',
   data: () => ({
@@ -22,16 +22,19 @@ export default {
     show: false,
   }),
   beforeCreate() {
-    window.addEventListener('error', function (e) {
+    /*window.addEventListener('error', function (e) {
       this.$sentry.captureException(new Error(e.message))
-    })
+    })*/
   },
   async beforeMount() {
     try {
-      const userDetails = await this.getUserDetails();
-      this.$store.commit("appStore/setUserDetails", userDetails)
-      if (process.env.SOCKET_URL) {
+      /*const userDetails = await this.getUserDetails();
+      this.$store.commit("appStore/setUserDetails", userDetails)*/
+      if (process.env.socketUrl) {
         this.socket = createConnection();
+        onMessage(async (data) => {
+          console.log('onMessage',data);
+        });
         onLeave(async (data) => {
           console.log('disconnect');
           await this.$store.dispatch("appStore/logout");

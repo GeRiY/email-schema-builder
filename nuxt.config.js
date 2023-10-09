@@ -6,10 +6,14 @@ export default {
     // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
     ssr: false,
 
+    router:{
+        base: '/dev/'
+    },
+
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
         titleTemplate: '%s',
-        title: 'Fuel App',
+        title: 'Dev site',
         htmlAttrs: {
             lang: 'hu'
         },
@@ -20,8 +24,8 @@ export default {
             {name: 'format-detection', content: 'telephone=no'}
         ],
         link: [
-            {rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'},
-            {rel: 'manifest', href: '/manifest.json'} // Add this line
+            {rel: 'icon', type: 'image/x-icon', href: '/dev/favicon.ico'}
+            //{rel: 'manifest', href: '/dev/manifest.json'} // Add this line
         ]
     },
 
@@ -37,7 +41,8 @@ export default {
         '~/mixins/SocketMixin.js',
         '~/mixins/RulesMixin.js',
         '~/mixins/CarsMixin.js',
-        '~/mixins/FuelsMixin.js'
+        '~/mixins/FuelsMixin.js',
+        '~/mixins/ClipboardMixin.js'
     ],
 
     loading: false,
@@ -109,7 +114,8 @@ export default {
     env: {
         baseUrl: process.env.BASE_URL,
         storageUserSecret: process.env.STORAGE_USER_SECRET,
-        socketUrl: process.env.SOCKET_URL
+        socketUrl: process.env.SOCKET_URL,
+        hostName: process.env.HOSTNAME
     },
 
     sentry: {

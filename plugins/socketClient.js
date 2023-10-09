@@ -2,14 +2,17 @@ import io from 'socket.io-client';
 import {getToken} from "@/api/loginHelper";
 
 var socket = null;
-var url = location.hostname === process.env.HOSTNAME ? process.env.SOCKET_URL : 'http://192.168.0.99:4102/';
+var url = location.hostname === process.env.hostName ? process.env.socketUrl : 'http://192.168.0.99:3000';
 export const createConnection =() => {
+    console.log({url})
     socket = io(url, {
-        query: {
+        path: "/io",
+        /*query: {
             token: getToken()
-        }
+        }*/
     });
     socket.on('connected', () => {
+        emitMessage('felcsatliztam');
         console.log('Connected:', socket.id);
     });
     return socket;

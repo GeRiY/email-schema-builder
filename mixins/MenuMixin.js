@@ -20,6 +20,7 @@ Vue.mixin({
             this.$store.commit('menuStore/toggleMenu', value);
         },
         isUserAccessMenu(menu) {
+            return true // temporary
             const user = getStorageUser();
             if (!user) {
                 return false;

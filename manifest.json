@@ -1,18 +1,16 @@
 {
-  "name": "Glucose Monitor",
-  "short_name": "GlucoseMonitor",
+  "name": "Dev Site",
+  "short_name": "DevSite",
   "lang": "hu",
   "display": "standalone",
   "start_url": "/",
-  "background_color": "#f8bbd0",
-  "theme_color": "#f8bbd0",
-  "description": "Glucose Monitor",
+  "description": "Dev Site",
   "useWebmanifestExtension": true,
   "icons": [
     {
-      "src": "/blood_glucose/icon/blood-glucose-logo.png",
-      "sizes": "64x64",
-      "type": "image/jpeg"
+      "src": "/dev/favicon.ico",
+      "sizes": "300x300",
+      "type": "image/ico"
     }
   ]
 }

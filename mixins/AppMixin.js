@@ -3,10 +3,10 @@ import {getToken} from "@/api/loginHelper";
 
 Vue.mixin({
     beforeMount() {
-      const token = getToken();
+      /*const token = getToken();
       if (!token) {
        this.$router.push('/login');
-      }
+      }*/
     },
     data() {
       return {
