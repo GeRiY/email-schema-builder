@@ -1,100 +1,63 @@
 <template>
-  <div style="display: flex;flex-direction: column;width: 100%">
-    <div class="pa-2" style="display: flex;flex-direction: row;width: 100%">
-      <v-card width="100%">
+  <div class="px-10" style="display: flex;flex-direction: column;width: 100%" v-if="!screenIsMobile"> <!-- screenIsMobile from appMixin.js -->
+    <!-- region Menu-Line -->
+    <div style="display: flex;flex-direction: row;width: 100%">
+      <v-card class="pa-2" width="100%">
         <v-btn @click="preView = !preView">{{ preView ? 'Előnézet' : 'Szerkesztő nézet' }}</v-btn>
       </v-card>
     </div>
+
+    <!-- region Edit-Mode -->
     <div v-if="!preView" class="pa-2" style="display: flex;flex-direction: row;gap:10px;width: 100%">
       <div style="display: flex;flex-direction: column;width: 100%">
         <v-card class="pa-2 emailComponents" width="100%">
-          <draggable
+          <EmailComponents
               v-model="emailComponents"
-              class="mt-5 emailComponents"
-              :group="{ name: 'emailComponents', pull: false, put: true }"
-          >
-            <v-card class="pa-2 mt-2"
-                    width="100%%"
-                    v-for="(comp, index) in emailComponents"
-                    :key="comp.id"
-                    :id="comp.id"
-            >
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" disabled @click="editComponentToEmailContent(comp,index)" text>Modify</v-btn>
-                <v-btn color="blue darken-1" @click="emailComponents.splice(index, 1)" text>Remove</v-btn>
-              </v-card-actions>
-              <component
-                  :is="'Template'+comp.component.name"
-                  v-bind="comp.props"
-                  :ref="`comp-${index}`"
-              ></component>
-            </v-card>
-          </draggable>
+          ></EmailComponents>
         </v-card>
       </div>
       <div style="display: flex;flex-direction: row;width: 40%">
-        <v-card width="100%">
-          <v-card-title>
-            Komponensek
-          </v-card-title>
-          <draggable
-              v-model="components"
-              class="mt-5 components"
-              :sort="false"
-              :group="{ name: 'emailComponents', pull: 'clone', put: false }"
-              :clone="cloneItem"
-          >
-            <v-card class="pa-2 mt-2"
-                    width="100%%"
-                    v-for="comp in components"
-                    :key="comp.id"
-                    :id="comp.id"
-            >
-              <div>{{ comp.name }}</div>
-            </v-card>
-          </draggable>
-        </v-card>
+        <ComponentList
+            :components="components"
+        />
       </div>
     </div>
 
-    <!-- preview -->
+    <!-- View-mode -->
     <div v-else>
       <v-card class="pa-2" width="100%">
         <v-card-title>
           Email tartalom
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" @click="copyHtml()" text>Copy HTML</v-btn>
+          <v-btn color="blue darken-1" :disabled="!emailContent" @click="copyHtml" text>Copy HTML</v-btn>
         </v-card-title>
         <v-card-text>
           <div v-if="!preView" v-html="emailContent"></div>
-          <div v-else>
-            <div v-for="(comp, index) in emailComponents" :key="index">
-              <component
-                  :is="'Template'+comp.component.name"
-                  v-bind="comp.props"
-                  :ref="`comp-${index}`"
-              ></component>
-            </div>
-          </div>
+          <EmailComponentsPreview
+              v-else
+              :components="emailComponents"
+              v-on:html="emailContent = $event"
+          />
         </v-card-text>
       </v-card>
     </div>
+
   </div>
+
+  <v-card class="pa-2" v-else>
+    <p>Feltételezzük hogy Mobile-ról látogatod az oldalt, kérlek látogasd meg asztali gépről vagy laptopról.<br>Előre is köszönjük!</p>
+    <p>We assume you are visiting the site from Mobile, please visit from desktop or laptop.<br>Thank you in advance!</p>
+  </v-card>
 </template>
 
 <script>
 import {getToken} from "@/api/loginHelper";
 import {APIGET} from "@/api/apiHelper";
 import moment from "moment/moment";
-import draggable from 'vuedraggable'
 import Components from "@/components/Template";
 
 export default {
   name: "index",
-  components: {
-    draggable
-  },
   async beforeMount() {
     const components = []
     let index = 0;
@@ -173,30 +136,6 @@ export default {
       this.newComponentDialogIndex = key;
 
       this.openNewComponentDialog('MODIFY')
-    },
-    changeView(){
-      let emailContent = '';
-      if (!this.preView){
-        this.emailComponents.forEach((comp,index) => {
-          emailContent += this.$refs[`comp-${index}`][0].$el.outerHTML;
-        })
-        this.preView = true;
-      } else {
-        this.preView = false;
-      }
-      this.emailContent = emailContent;
-    },
-    /*onDragStart(evt) {
-
-    },
-    onDragEnd(evt) {
-
-    },*/
-    cloneItem(item) {
-      const clonedItem = JSON.parse(JSON.stringify(item))
-      const time = new Date().getTime();
-      clonedItem.id += '_'+time;
-      return clonedItem;
     },
     copyHtml(){
       this.copyText(this.emailContent);

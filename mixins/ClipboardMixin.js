@@ -8,7 +8,6 @@ Vue.mixin({
         },
         async cutText(data) {
             return !!cut(data);
-
         }
     }
 })

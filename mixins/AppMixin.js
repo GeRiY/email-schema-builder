@@ -3,19 +3,32 @@ import {getToken} from "@/api/loginHelper";
 
 Vue.mixin({
     beforeMount() {
-      /*const token = getToken();
-      if (!token) {
-       this.$router.push('/login');
-      }*/
+        this.checkScreenIsMobile();  // Inicializáláskor ellenőrizzük a képernyő méretet
+        window.addEventListener('resize', this.checkScreenIsMobile);
+        /* const token = getToken();
+        if (!token) {
+        this.$router.push('/login');
+        } */
     },
     data() {
       return {
+          screenIsMobile: false,
           appColors: {
               defaultCard: '#caf0f8',
           }
       }
     },
     computed: {
+        gColors() {
+            return {
+                primary: '#0077b6',
+            };
+        },
+        gFontColors() {
+            return {
+                primary: '#fff',
+            };
+        },
         currentPage() {
             return this.$store.state.tabStore.activeTab;
         },
@@ -33,6 +46,9 @@ Vue.mixin({
     methods: {
         changeTab(tab) {
             this.$store.commit('tabStore/changeActiveTab', tab);
-        }
+        },
+        checkScreenIsMobile() {
+            this.screenIsMobile = window.outerWidth <= 768;  // 768px alatt tekintjük mobil méretnek
+        },
     }
 })

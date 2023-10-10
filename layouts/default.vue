@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app app>
     <AppBar :socket="socket" v-on:show-chat-window="show = true" />
 <!--    <ControlBar v-if="$store.state.tabStore.activeTab !== 3" />-->
     <NavigationDrawer />
@@ -7,6 +7,13 @@
     <v-main>
       <Nuxt />
     </v-main>
+
+    <v-footer app absolute :color="gColors.primary">
+      <span :style="{color: gFontColors.primary}">&copy; 2023</span>
+      <v-btn :color="gFontColors.primary" text @click="copyText('mgeri1993@gmail.com')">
+        <v-icon>mdi-email</v-icon>
+      </v-btn>
+    </v-footer>
   </v-app>
 </template>
 
