@@ -2,31 +2,33 @@
   <div style="display: flex;flex-direction: column;width: 100%">
     <div class="pa-2" style="display: flex;flex-direction: row;width: 100%">
       <v-card width="100%">
-        Menüsáv
+        <v-btn @click="preView = !preView">{{ preView ? 'Előnézet' : 'Szerkesztő nézet' }}</v-btn>
       </v-card>
     </div>
-    <div class="pa-2" style="display: flex;flex-direction: row;gap:10px;width: 100%">
+    <div v-if="!preView" class="pa-2" style="display: flex;flex-direction: row;gap:10px;width: 100%">
       <div style="display: flex;flex-direction: column;width: 100%">
-        <v-card width="100%">
+        <v-card class="pa-2 emailComponents" width="100%">
           <draggable
               v-model="emailComponents"
-              :list="emailComponents"
-              class="mt-5"
-              group="emailComponents"
-              @start="onDragStart"
-              @end="onDragEnd"
+              class="mt-5 emailComponents"
+              :group="{ name: 'emailComponents', pull: false, put: true }"
           >
             <v-card class="pa-2 mt-2"
                     width="100%%"
-                    :key="'email-component-'+index"
                     v-for="(comp, index) in emailComponents"
+                    :key="comp.id"
+                    :id="comp.id"
             >
-              <div>{{ comp.name }}</div>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" @click="editComponentToEmailContent(comp,key)" text>Modify</v-btn>
-                <v-btn color="blue darken-1" @click="emailComponents.splice(key, 1)" text>Remove</v-btn>
+                <v-btn color="blue darken-1" disabled @click="editComponentToEmailContent(comp,index)" text>Modify</v-btn>
+                <v-btn color="blue darken-1" @click="emailComponents.splice(index, 1)" text>Remove</v-btn>
               </v-card-actions>
+              <component
+                  :is="'Template'+comp.component.name"
+                  v-bind="comp.props"
+                  :ref="`comp-${index}`"
+              ></component>
             </v-card>
           </draggable>
         </v-card>
@@ -38,19 +40,16 @@
           </v-card-title>
           <draggable
               v-model="components"
-              :list="components"
-              class="mt-5"
+              class="mt-5 components"
               :sort="false"
-              group="emailComponents"
-              :options="{ name: 'emailComponents', pull: 'clone', put: false }"
+              :group="{ name: 'emailComponents', pull: 'clone', put: false }"
               :clone="cloneItem"
-              @start="onDragStart"
-              @end="onDragEnd"
           >
             <v-card class="pa-2 mt-2"
                     width="100%%"
-                    :key="'component-'+index"
-                    v-for="(comp,index) in components"
+                    v-for="comp in components"
+                    :key="comp.id"
+                    :id="comp.id"
             >
               <div>{{ comp.name }}</div>
             </v-card>
@@ -58,181 +57,30 @@
         </v-card>
       </div>
     </div>
-  </div>
-<!--  <div class="pa-2 mx-2 my-2" style="background: #ffffff;width: 100%">
-    <div></div>
-    <p>View: {{ preView ? 'Előnézet' : 'Szerkesztő' }}</p>
 
-    &lt;!&ndash; i want to a field to set page infos like page width and height &ndash;&gt;
-    <div class="form">
-      <v-text-field
-          v-model="pageRowCount"
-          label="Page Row count"
-          type="number"
-          :rules="[
-            v => (parseInt(v) && v >= 0) || 'Must be greater than 0',
-          ]"
-      />
-      <v-text-field
-          v-model="pageColCount"
-          label="Page Col count"
-          type="number"
-          :rules="[
-            v => (parseInt(v) && v >= 0) || 'Must be greater than 0',
-          ]"
-      />
-      <v-text-field
-          v-model="pageWidth"
-          label="Page width"
-          type="number"
-          :rules="[
-            v => (parseInt(v) && v >= 0) || 'Must be greater than 0',
-          ]"
-      />
-      <v-text-field
-          v-model="pageHeight"
-          label="Page height"
-          type="number"
-          :rules="[
-            v => (parseInt(v) && v >= 0) || 'Must be greater than 0',
-          ]"
-      />
-      <v-text-field
-          v-model="pageMarginTop"
-          label="Content margin top"
-          type="number"
-          :rules="[
-            v => (parseInt(v) >= 0) || 'Must be greater than 0',
-          ]"
-      />
-    </div>
-
-    <div style="display: flex;flex-wrap: nowrap;justify-content: flex-start;gap: 10px;">
-      <v-btn v-if="!preView" @click="openNewComponentDialog('ADD')">Add component</v-btn>
-      <v-btn v-if="preView" @click="copyHtml">Copy HTML</v-btn>
-      <v-btn @click="changeView">Change View</v-btn>
-    </div>
-
-    <div v-if="!preView">
-      <table style="width: 100%;height: 100%;background: red">
-        <tr v-for="r in pageRowCount" style="width: inherit">
-          <td v-for="c in pageColCount" :style="{width: 100/pageColCount+'%'}">
-            <draggable v-model="emailComponents"
-                       group="group"
-                       @start="dragging = true"
-                       @end="dragging = false"
-            >
-
-            </draggable>
-          </td>
-        </tr>
-      </table>
-    </div>
-
-&lt;!&ndash;    <div class="mt-5" v-if="!preView" :style="`width: ${pageWidth}px;height: ${pageHeight}px;margin-top: ${pageMarginTop}px`">
-      <draggable v-model="emailComponents"
-                 group="group"
-                 @start="dragging = true"
-                 @end="dragging = false"
-      >
-      <div v-for="(comp,key) in emailComponents" :key="key">
-        <v-btn class="mb-2" @click="editComponentToEmailContent(comp,key)" color="warning">Modify</v-btn>
-        <v-btn class="mb-2" @click="emailComponents.splice(key, 1)" color="error">Remove</v-btn>
-        <component :is="comp.name" :ref="`comp-${key}`" v-bind="comp.props"/>
-      </div>
-      </draggable>
-    </div>&ndash;&gt;
-
+    <!-- preview -->
     <div v-else>
-      <div v-html="emailContent" :style="`width: ${pageWidth}px;height: ${pageHeight}px;margin-top: ${pageMarginTop}px`"></div>
-    </div>
-
-    &lt;!&ndash; component editor dialog &ndash;&gt;
-    <v-dialog :value="newComponentDialog">
-      <v-card class="pa-2">
-        <h3 v-if="newComponentDialogType === 'MODIFY'">
-          Modify {{ component.name }} component
-        </h3>
-        <v-select
-            v-else
-            v-model="selectedComponent"
-            :items="Array.isArray(components) ? components : []"
-            label="Template"
-            item-text="name"
-            item-value="name"
-        />
-
-        <v-card class="pa-2 mb-2" color="lightgray" v-if="component">
-          <div v-for="(prop, key) in component.props">
-            <v-text-field
-                v-if="['il'].includes(key.split('_')[0])"
-                :key="key"
-                :label="key.split('_')[1]"
-                :value="prop"
-                @input="component.props[key] = $event"
-            />
-            <v-text-field
-                v-else-if="['s'].includes(key.split('_')[0])"
-                :key="key"
-                :label="key.split('_')[1]"
-                :value="prop"
-                @input="component.props[key] = $event"
-            />
-            <v-text-field
-                v-else-if="['num'].includes(key.split('_')[0])"
-                :key="key"
-                :label="key.split('_')[1]"
-                :rules="[
-                    v => (v && v >= key.split('_')[2]) || 'Must be greater than '+key.split('_')[2],
-                    v => (v && v <= key.split('_')[3]) || 'Must be smaller than '+key.split('_')[3]
-                ]"
-                :value="prop"
-                type="number"
-                @input="component.props[key] = $event"
-            />
-            <v-textarea
-                v-else-if="['ts'].includes(key.split('_')[0])"
-                :key="key"
-                :label="key.split('_')[1]"
-                :value="prop"
-                @input="component.props[key] = $event"
-            />
-            <v-select
-                v-else-if="['sel'].includes(key.split('_')[0])"
-                :key="key"
-                :label="key.split('_')[2]"
-                :value="prop"
-                :items="selectOtions[key.split('_')[1]] ?? []"
-                @input="component.props[key] = $event"
-            />
-            <div v-else>
-              <div v-if="Array.isArray(prop)" style="width: 100%">
-                <h5>{{ key }}</h5>
-                <div v-for="(item, index) in prop" style="display: flex;flex-wrap: nowrap;width: 100%">
-                  <div v-for="(subItem, subKey) in item">
-                    <v-text-field
-                        v-if="['s'].includes(subKey.split('_')[0])"
-                        :key="subKey"
-                        :label="subKey.split('_')[1]"
-                        :value="subItem"
-                        @input="component.props[key][index][subKey] = $event"
-                    />
-                  </div>
-                </div>
-              </div>
+      <v-card class="pa-2" width="100%">
+        <v-card-title>
+          Email tartalom
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" @click="copyHtml()" text>Copy HTML</v-btn>
+        </v-card-title>
+        <v-card-text>
+          <div v-if="!preView" v-html="emailContent"></div>
+          <div v-else>
+            <div v-for="(comp, index) in emailComponents" :key="index">
+              <component
+                  :is="'Template'+comp.component.name"
+                  v-bind="comp.props"
+                  :ref="`comp-${index}`"
+              ></component>
             </div>
           </div>
-        </v-card>
-
-        <component ref="currComp" v-if="component" :is="component.name" v-bind="component.props"/>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" :disabled="!component" text @click="addToEmailContent(component)">{{ newComponentDialogType === 'ADD' ? 'Add' : 'Save' }}</v-btn>
-          <v-btn color="blue darken-1" text @click="newComponentDialog = false">Close</v-btn>
-        </v-card-actions>
+        </v-card-text>
       </v-card>
-    </v-dialog>
-  </div>-->
+    </div>
+  </div>
 </template>
 
 <script>
@@ -249,17 +97,22 @@ export default {
   },
   async beforeMount() {
     const components = []
+    let index = 0;
     Object.entries(Components).forEach(component => {
+      const time = new Date().getTime();
+      index++;
       if (component[1].component){
-        components.push({
+        components.push(component[1])
+        /*components.push({
           name: 'Template'+component[0],
           component: component[1].component,
-          props: component[1].defaultProps
-        })
+          props: component[1].defaultProps,
+          id: component[0]+'-'+index
+        })*/
       }
     });
     this.components = components;
-    this.emailComponents = JSON.parse(JSON.stringify(components));
+    this.emailComponents = []; // JSON.parse(JSON.stringify(components));
   },
   data() {
     return {
@@ -333,19 +186,17 @@ export default {
       }
       this.emailContent = emailContent;
     },
-    onDragStart(evt) {
-      this.dragging = true;
-      this.initialIndex = evt.oldIndex;
+    /*onDragStart(evt) {
+
     },
     onDragEnd(evt) {
-      console.log(evt.oldIndex,evt.newIndex)
-      if (evt.oldIndex === evt.newIndex) {
-        this.dragging = false;
-        evt.preventDefault();
-      }
-    },
+
+    },*/
     cloneItem(item) {
-      return JSON.parse(JSON.stringify(item));
+      const clonedItem = JSON.parse(JSON.stringify(item))
+      const time = new Date().getTime();
+      clonedItem.id += '_'+time;
+      return clonedItem;
     },
     copyHtml(){
       this.copyText(this.emailContent);
@@ -375,5 +226,10 @@ export default {
   flex-wrap: wrap;
   justify-content: flex-start;
   gap: 10px;
+}
+
+.emailComponents {
+  height: 100%;
+  width: 100%;
 }
 </style>

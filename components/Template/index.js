@@ -3,15 +3,19 @@ import Image from "@/components/Template/Image.vue";
 import ImportantInfo from "@/components/Template/ImportantInfo.vue";
 import Table from "@/components/Template/Table.vue";
 import Welcome from "@/components/Template/Welcome.vue";
+
 /*
 * s = string
 * ts = textarea string
 * il = image link
 * */
+
 export default {
     'Image': {
+        id: Image.name+'_'+1,
+        name: "Kép",
         component: Image,
-        defaultProps: {
+        props: {
             num_marginnLeft_0_500: 100,
             num_marginnRight_0_500: 0,
             sel_lay_layout: "center",
@@ -21,8 +25,10 @@ export default {
         }
     },
     'Welcome': {
+        id: Welcome.name+'_'+2,
+        name: Welcome.name,
         component: Welcome,
-        defaultProps: {
+        props: {
             num_marginnLeft_0_500: 300,
             num_marginnRight_0_500: 0,
             s_name: 'Nagy Pistike' ,
@@ -30,8 +36,10 @@ export default {
         }
     },
     'Table': {
+        id: Table.name+'_'+3,
+        name: Table.name,
         component: Table,
-        defaultProps: {
+        props: {
             num_marginnLeft_0_500: 300,
             num_marginnRight_0_500: 0,
             sel_lay_layout: "left",
@@ -42,16 +50,20 @@ export default {
         }
     },
     'ImportantInfo': {
+        id: ImportantInfo.name+'_'+4,
+        name: ImportantInfo.name,
         component: ImportantInfo,
-        defaultProps: {
+        props: {
             num_marginnLeft_0_500: 300,
             num_marginnRight_0_500: 0,
             ts_importantInfoText: 'Itt van egy nagyon fontos szövegrész amit csak neked töltöttem ki :)',
         }
     },
     'Contact': {
+        id: Contact.name+'_'+5,
+        name: Contact.name,
         component: Contact,
-        defaultProps: {
+        props: {
             num_marginnLeft_0_500: 300,
             num_marginnRight_0_500: 0,
             rows: [

@@ -1,10 +1,10 @@
 <template>
-  <v-app class="def-bg-color">
+  <v-app>
     <AppBar :socket="socket" v-on:show-chat-window="show = true" />
 <!--    <ControlBar v-if="$store.state.tabStore.activeTab !== 3" />-->
     <NavigationDrawer />
     <NavigationChatWindow v-model="show" v-if="socket"/>
-    <v-main class="def-bg-color">
+    <v-main>
       <Nuxt />
     </v-main>
   </v-app>
