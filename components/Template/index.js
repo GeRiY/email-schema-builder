@@ -8,6 +8,8 @@ import Welcome from "@/components/Template/Welcome.vue";
 * s = string
 * ts = textarea string
 * il = image link
+* num = number
+* sel = select (select options from index.vue/ selectOtions object)
 * */
 
 export default {
