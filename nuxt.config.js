@@ -1,5 +1,6 @@
 import colors from 'vuetify/es5/util/colors'
 import dotenv from 'dotenv'
+import I18N from './i18n.config.js'
 dotenv.config()
 
 export default {
@@ -59,7 +60,8 @@ export default {
     // Modules: https://go.nuxtjs.dev/config-modules
     modules: [
         // ['@nuxtjs/pwa', {workbox: false}],
-        '@nuxtjs/sentry'
+        '@nuxtjs/sentry',
+        ['@nuxtjs/i18n',I18N],
     ],
 
     // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
